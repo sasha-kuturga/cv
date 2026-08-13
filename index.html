@@ -3,53 +3,110 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Alexandra Kuturga — Producer</title>
+<title>Sasha Kuturga</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600&family=Inter:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="style.css">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
-  .gate{min-height:100svh;display:flex;align-items:center;position:relative;overflow:hidden;padding-block:100px}
-  .doors{margin-top:clamp(40px,6vh,72px);display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line-2);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
-  .door{background:rgba(10,10,11,.4);backdrop-filter:blur(4px);padding:clamp(24px,3.4vw,38px);text-decoration:none;display:block;transition:background .3s}
-  .door:hover,.door:focus-visible{background:rgba(255,255,255,.06)}
-  .door h2{font-family:var(--display);font-weight:500;font-size:clamp(22px,3vw,34px);letter-spacing:-.03em;margin-top:12px}
-  .door p{color:#9A9CA3;margin-top:12px;font-size:15px;max-width:38ch}
-  .door .go{margin-top:20px;display:inline-block;font-family:var(--data);font-size:11px;letter-spacing:.13em;text-transform:uppercase;color:var(--ink)}
-  @media (max-width:720px){.doors{grid-template-columns:1fr}}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%;overflow:hidden}
+body{
+  background:#08080A;
+  font-family:'Archivo','Helvetica Neue',Helvetica,Arial,sans-serif;
+  -webkit-font-smoothing:antialiased;
+  color:#F2F2F0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+/* grain */
+body::after{
+  content:'';position:fixed;inset:0;z-index:10;pointer-events:none;opacity:.17;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='260'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.82' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* moving gradient field */
+.field{position:fixed;inset:0;z-index:0;overflow:hidden}
+.orb{position:absolute;border-radius:50%;filter:blur(90px);will-change:transform}
+.o1{
+  width:55vmax;height:55vmax;
+  left:15%;top:10%;
+  background:radial-gradient(circle at 40% 40%,#D4D4D8 0%,#71717A 30%,#27272A 58%,transparent 72%);
+  opacity:.5;
+  animation:float1 28s ease-in-out infinite;
+}
+.o2{
+  width:40vmax;height:40vmax;
+  right:5%;bottom:15%;
+  background:radial-gradient(circle at 55% 45%,#A1A1AA 0%,#3F3F46 40%,transparent 68%);
+  opacity:.35;
+  animation:float2 36s ease-in-out infinite;
+}
+.o3{
+  width:48vmax;height:48vmax;
+  left:40%;bottom:-10%;
+  background:radial-gradient(circle at 50% 50%,#52525B 0%,transparent 65%);
+  opacity:.4;
+  animation:float3 42s ease-in-out infinite;
+}
+@keyframes float1{
+  0%,100%{transform:translate(0,0) scale(1)}
+  33%{transform:translate(6%,-8%) scale(1.06)}
+  66%{transform:translate(-4%,5%) scale(.95)}
+}
+@keyframes float2{
+  0%,100%{transform:translate(0,0) scale(1)}
+  40%{transform:translate(-8%,6%) scale(1.08)}
+  70%{transform:translate(5%,-3%) scale(.94)}
+}
+@keyframes float3{
+  0%,100%{transform:translate(0,0) scale(1)}
+  50%{transform:translate(7%,-6%) scale(1.05)}
+}
+
+/* content */
+.center{position:relative;z-index:5;text-align:center;padding:20px}
+.name{
+  font-weight:300;
+  font-size:clamp(38px,8vw,96px);
+  letter-spacing:-.04em;
+  line-height:.95;
+  user-select:none;
+}
+.contact{
+  margin-top:clamp(24px,4vh,48px);
+}
+.contact a{
+  font-family:'Archivo',sans-serif;
+  font-weight:400;
+  font-size:clamp(13px,1.4vw,16px);
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  color:rgba(242,242,240,.45);
+  text-decoration:none;
+  transition:color .4s;
+}
+.contact a:hover,.contact a:focus-visible{color:rgba(242,242,240,.9)}
+
+:focus-visible{outline:1px solid rgba(255,255,255,.6);outline-offset:4px}
+@media(prefers-reduced-motion:reduce){*{animation:none!important}}
 </style>
 </head>
 <body>
-<header class="gate">
-  <div class="field" aria-hidden="true">
-    <div class="blob b1"></div><div class="blob b2"></div><div class="blob b3"></div>
-  </div>
-  <div class="wrap" style="position:relative;z-index:2;width:100%">
-    <p class="eyebrow">Alexandra Kuturga — Chicago, IL</p>
-    <h1 style="max-width:13ch">Producer. <em>Two tracks.</em></h1>
-    <p class="lede">Six years of creative production: AAA game art at volume, and VFX-heavy commercial and music video post. Pick the one you're hiring for.</p>
 
-    <div class="doors">
-      <a class="door" href="art-producer/">
-        <span class="data">Currently</span>
-        <h2>Game art production</h2>
-        <p>World of Warcraft, 50+ artists, 80+ concurrent assets, pipelines built from scratch.</p>
-        <span class="go">Open ↗</span>
-      </a>
-      <a class="door" href="producer/">
-        <span class="data">2019 — 2024</span>
-        <h2>Post production</h2>
-        <p>National TV campaigns, VFX-heavy commercials, music videos, delivery to broadcast spec.</p>
-        <span class="go">Open ↗</span>
-      </a>
-    </div>
+<div class="field" aria-hidden="true">
+  <div class="orb o1"></div>
+  <div class="orb o2"></div>
+  <div class="orb o3"></div>
+</div>
 
-    <div class="meta" style="margin-top:34px">
-      <a class="pill" href="mailto:kuturga.alexandra@gmail.com">kuturga.alexandra@gmail.com</a>
-      <a class="pill" href="https://linkedin.com/in/alexandra-kuturga" target="_blank" rel="noopener">LinkedIn ↗</a>
-      <span class="data">U.S. Permanent Resident · No sponsorship required</span>
-    </div>
+<div class="center">
+  <h1 class="name">Sasha Kuturga</h1>
+  <div class="contact">
+    <a href="mailto:kuturga.alexandra@gmail.com">kuturga.alexandra@gmail.com</a>
   </div>
-</header>
+</div>
+
 </body>
 </html>
