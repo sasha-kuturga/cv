@@ -243,7 +243,7 @@ function configureContactButton() {
     contactButton.style.display = "inline-flex";
   } else {
     contactButton.style.display = "none";
-    contactLine.textContent = "ADD YOUR EMAIL OR CONTACT URL AT THE TOP OF game.js";
+    contactLine.textContent = "kuturga.alexandra@gmail.com";
   }
 }
 
