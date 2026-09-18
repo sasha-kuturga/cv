@@ -6,6 +6,16 @@
 const CONTACT_EMAIL = "kuturga.alexandra@gmail.com";
 const CONTACT_URL = "https://kuturga.com";  
 
+// Analytics helper: the game still works if analytics is blocked.
+function trackEvent(name, params = {}) {
+  if (typeof window.gtag === "function") {
+    window.gtag("event", name, {
+      application: "columnfive",
+      ...params
+    });
+  }
+}
+
 /* ========================================================= */
 
 const GRID = 16;
@@ -112,6 +122,7 @@ function randomFreeCell() {
 function startGame() {
   if (started || gameOver) return;
   started = true;
+  trackEvent("game_start");
   startOverlay.classList.add("hidden");
   timer = window.setInterval(step, TICK_MS);
 }
@@ -160,6 +171,10 @@ function step() {
 
 function collectMilestone() {
   collected += 1;
+  trackEvent("milestone", {
+    milestone_number: collected,
+    milestone_name: MILESTONES[collected - 1]
+  });
   updateProgress();
   milestoneItems[collected - 1]?.classList.add("done");
   showToast(collected - 1);
@@ -197,6 +212,10 @@ function hideToast() {
 
 function failGame(reason) {
   gameOver = true;
+  trackEvent("game_over", {
+    reason,
+    milestones_collected: collected
+  });
   stopLoop();
   playTone(150, 0.12);
 
@@ -211,6 +230,7 @@ function failGame(reason) {
 }
 
 function winGame() {
+  trackEvent("game_complete", { milestones_collected: collected });
   playTone(720, 0.08);
   window.setTimeout(() => playTone(880, 0.08), 90);
 
@@ -407,7 +427,17 @@ function playTone(frequency, duration) {
   }
 }
 
-retryButton.addEventListener("click", resetGame);
+retryButton.addEventListener("click", () => {
+  trackEvent("game_retry", { milestones_collected: collected });
+  resetGame();
+});
+
+contactButton.addEventListener("click", () => {
+  trackEvent("meet_alexandra_click", {
+    destination: CONTACT_URL || `mailto:${CONTACT_EMAIL}`
+  });
+});
+
 modalClose.addEventListener("click", hideModal);
 
 modalBackdrop.addEventListener("click", (e) => {
