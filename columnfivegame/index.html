@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Keeping Things Moving — Alexandra Kuturga</title>
+  <meta name="description" content="A tiny producer game by Alexandra Kuturga." />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <main class="stage">
+    <header class="topbar">
+      <a class="brand" href="#" aria-label="Alexandra Kuturga home">Alexandra Kuturga</a>
+    </header>
+
+    <section class="layout" aria-label="Producer Snake mini game">
+      <aside class="intro">
+        <p class="eyebrow">A QUICK GAME ABOUT</p>
+        <h1>Keeping<br />Things<br />Moving</h1>
+        <div class="intro-copy">
+          <p>Collect 5 milestones<br />to ship the project.</p>
+          <p class="micro">SAME AS IN REAL LIFE.</p>
+        </div>
+      </aside>
+
+      <section class="game-column">
+        <div class="game-meta">
+          <span>PROJECT SNAKE</span>
+          <span>16 × 16</span>
+        </div>
+
+        <div class="game-shell" id="gameShell">
+          <canvas id="gameCanvas" width="640" height="640" aria-label="Snake game board"></canvas>
+
+          <div class="start-overlay" id="startOverlay">
+            <div>
+              <p class="overlay-kicker">READY?</p>
+              <p class="overlay-title">Press any arrow key</p>
+              <p class="overlay-sub">or use WASD</p>
+            </div>
+          </div>
+
+          <div class="achievement-toast" id="achievementToast" role="status" aria-live="polite">
+            <span class="toast-index">01 / 05</span>
+            <strong>Got the brief from the client</strong>
+          </div>
+        </div>
+      </section>
+
+      <aside class="milestones">
+        <div class="milestone-head">
+          <span>MILESTONES</span>
+          <strong id="scoreText">0 / 5</strong>
+        </div>
+
+        <div class="progress-track" aria-hidden="true">
+          <div class="progress-fill" id="progressFill"></div>
+        </div>
+
+        <ol class="milestone-list" id="milestoneList">
+          <li><span class="check"></span><span>Got the brief<br />from the client</span></li>
+          <li><span class="check"></span><span>Aligned the team</span></li>
+          <li><span class="check"></span><span>Turned feedback<br />into direction</span></li>
+          <li><span class="check"></span><span>Kept it on track</span></li>
+          <li><span class="check"></span><span>Shipped it</span></li>
+        </ol>
+
+        <div class="producer-copy">
+          <p>SOMEONE HAS TO<br />PUT ALL THE PIECES<br />TOGETHER.</p>
+          <p>GOOD THING<br />I DO THIS FOR A LIVING.</p>
+        </div>
+      </aside>
+    </section>
+
+    <footer class="footer">
+      <div class="controls" aria-label="Keyboard controls">
+        <div class="keypad" aria-hidden="true">
+          <span></span><kbd>↑</kbd><span></span>
+          <kbd>←</kbd><kbd>↓</kbd><kbd>→</kbd>
+        </div>
+        <div class="control-copy">
+          <p>USE ARROW KEYS<br />TO MOVE</p>
+          <p>COLLECT THE DOTS<br />TO UNLOCK MILESTONES</p>
+        </div>
+      </div>
+
+      <div class="signature">
+        <p>ALEXANDRA KUTURGA</p>
+        <p>PRODUCER</p>
+      </div>
+    </footer>
+  </main>
+
+  <div class="modal-backdrop" id="modalBackdrop" hidden>
+    <section class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <button class="modal-close" id="modalClose" aria-label="Close dialog">×</button>
+      <p class="modal-kicker" id="modalKicker">PROJECT STATUS</p>
+      <h2 id="modalTitle">Still moving?</h2>
+      <p class="modal-copy" id="modalCopy">
+        Want another try? Sure. But why spend your time keeping every piece moving when you could hand it to a producer?
+      </p>
+      <div class="modal-actions">
+        <button class="btn btn-dark" id="retryButton">Try again</button>
+        <a class="btn btn-light" id="contactButton" href="#">Contact Alexandra</a>
+      </div>
+      <p class="contact-line" id="contactLine"></p>
+    </section>
+  </div>
+
+  <script src="game.js"></script>
+</body>
+</html>
