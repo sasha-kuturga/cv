@@ -4,7 +4,7 @@
    ========================================================= */
 
 const CONTACT_EMAIL = "kuturga.alexandra@gmail.com";
-const CONTACT_URL = "kuturga.com";  
+const CONTACT_URL = "https://kuturga.com";  
 
 /* ========================================================= */
 
