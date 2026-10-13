@@ -1,0 +1,547 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Пять карточек</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* Layout: the lesson handouts brought to screen — paper sheet, left label column, five dashed cut-out cards in a row */
+:root {
+  --paper: #ffffff;
+  --desk: #f3f3f1;
+  --ink: #111111;
+  --grey: #6a6a6a;
+  --rule: #cfcfcf;
+  --fill: #f5f5f5;
+  --dash: #9a9a9a;
+  --on-ink: #ffffff;
+  --scrim: rgba(17, 17, 17, .45);
+  --font: "Inter Tight", "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #18181a; --desk: #0f0f10; --ink: #f1f1ef; --grey: #9b9b9b;
+    --rule: #3a3a3d; --fill: #242427; --dash: #6c6c70; --on-ink: #111111; --scrim: rgba(0, 0, 0, .6); color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #18181a; --desk: #0f0f10; --ink: #f1f1ef; --grey: #9b9b9b;
+  --rule: #3a3a3d; --fill: #242427; --dash: #6c6c70; --on-ink: #111111; --scrim: rgba(0, 0, 0, .6); color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html, body { min-height: 100%; }
+body {
+  background: var(--desk); color: var(--ink); font-family: var(--font);
+  font-size: 15px; line-height: 1.4; padding-inline: 16px; padding-block: 24px;
+  -webkit-font-smoothing: antialiased;
+}
+.sheet {
+  max-width: 1040px; margin: 0 auto; background: var(--paper);
+  padding: clamp(20px, 4vw, 44px) clamp(16px, 4vw, 48px);
+  display: flex; flex-direction: column; gap: 22px;
+}
+.topline { display: flex; justify-content: space-between; font-size: 12px; }
+h1 {
+  margin: 8px 0 0; font-size: clamp(44px, 8vw, 72px); line-height: 1;
+  font-weight: 500; letter-spacing: -0.04em; text-wrap: balance;
+}
+.sec { display: flex; gap: 20px; border-top: 1px solid var(--ink); padding-top: 10px; }
+.sec-label { width: 110px; flex-shrink: 0; font-size: 12px; line-height: 15px; }
+.sec-label span { display: block; color: var(--grey); }
+.sec-body { flex-grow: 1; min-width: 0; }
+.rules { margin: 0; font-size: 15px; line-height: 21px; max-width: 72ch; }
+.rules b { font-weight: 600; }
+
+.cards { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 12px; }
+.slot { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.card {
+  position: relative; aspect-ratio: 3 / 4; width: 100%; border: 1px dashed var(--dash);
+  background: var(--paper); color: var(--ink); font: inherit; cursor: pointer;
+  display: flex; align-items: center; justify-content: center; padding: 34px 8px 18px;
+  transition: background .15s, color .15s, border-color .15s;
+}
+.card:hover { background: var(--fill); }
+.card[aria-pressed="true"] { background: var(--ink); color: var(--on-ink); border: 1px solid var(--ink); }
+.card[aria-pressed="true"] .lbl, .card[aria-pressed="true"] .used { color: var(--on-ink); opacity: .75; }
+.card:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
+.card .lbl { position: absolute; top: 10px; left: 12px; font-size: 12px; color: var(--grey); }
+.card .used { position: absolute; bottom: 9px; left: 0; right: 0; text-align: center; font-size: 11px; color: var(--grey); }
+.card .inner { display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; }
+.card .word { font-size: clamp(20px, 2.9vw, 32px); line-height: 1.1; font-weight: 500; letter-spacing: -0.02em; text-align: center; }
+.card .word.long { font-size: clamp(17px, 2.3vw, 26px); }
+.card .word.xlong { font-size: clamp(14px, 1.85vw, 21px); }
+.card.prep .word { font-size: clamp(34px, 5vw, 56px); }
+.card.flip .inner { animation: flip .38s ease both; }
+@keyframes flip { 0% { transform: rotateY(90deg); opacity: 0; } 100% { transform: rotateY(0); opacity: 1; } }
+.tools { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+.tool {
+  font: inherit; font-size: 13px; padding: 6px 0; cursor: pointer;
+  border: 1px solid var(--rule); background: var(--paper); color: var(--ink);
+}
+.tool:hover { background: var(--fill); }
+.tool:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+.tool b { font-weight: 600; }
+
+.controls { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+button.btn {
+  font: inherit; font-size: 15px; font-weight: 500; padding: 11px 18px; cursor: pointer;
+  border: 1px solid var(--ink); background: var(--paper); color: var(--ink);
+}
+button.btn.primary { background: var(--ink); color: var(--on-ink); }
+button.btn:hover { background: var(--fill); }
+button.btn.primary:hover { opacity: .88; background: var(--ink); }
+button.btn:focus-visible, .chip:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+.hint { font-size: 12px; color: var(--grey); margin-left: auto; }
+kbd { font: inherit; border: 1px solid var(--rule); padding: 0 5px; }
+
+.score-grid { display: grid; grid-template-columns: repeat(3, auto) 1fr; gap: 4px 22px; align-items: end; margin-bottom: 14px; }
+.sc-n { font-size: 32px; line-height: 1; font-weight: 500; letter-spacing: -0.03em; font-variant-numeric: tabular-nums; }
+.sc-l { font-size: 12px; color: var(--grey); }
+.sc-total .sc-n { font-size: 44px; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip {
+  font: inherit; font-size: 14px; cursor: pointer; padding: 8px 12px; min-width: 92px;
+  border: 1px solid var(--rule); background: var(--paper); color: var(--ink); text-align: left;
+}
+.chip small { display: block; font-size: 11px; color: var(--grey); }
+.chip[aria-pressed="true"] { background: var(--ink); color: var(--on-ink); border-color: var(--ink); }
+.chip[aria-pressed="true"] small { color: var(--on-ink); opacity: .7; }
+.chip.bonus { min-width: 150px; }
+.give { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+
+.players { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); border-top: 1px solid var(--rule); }
+.pl { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; padding: 12px 10px; border-bottom: 1px solid var(--rule); }
+.pl + .pl { border-left: 1px solid var(--rule); }
+.pl.turn { background: var(--fill); }
+.pl input {
+  font: inherit; font-size: 17px; font-weight: 500; border: 0; border-bottom: 1px dashed transparent;
+  background: transparent; color: var(--ink); width: 100%; min-width: 0; padding: 2px 0;
+}
+.pl input:hover, .pl input:focus { border-bottom-color: var(--dash); outline: none; }
+.pl .score { font-size: 34px; font-weight: 500; letter-spacing: -0.03em; font-variant-numeric: tabular-nums; }
+.pl .turn-tag { font-size: 11px; color: var(--grey); white-space: nowrap; }
+.foot { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin-top: 12px; font-size: 13px; color: var(--grey); }
+.foot button { font: inherit; font-size: 13px; background: none; border: 0; color: var(--grey); text-decoration: underline; cursor: pointer; padding: 0; }
+.foot button:hover { color: var(--ink); }
+.foot button:disabled { opacity: .4; cursor: default; }
+.foot .confirm { color: var(--ink); }
+
+/* popup */
+[hidden] { display: none !important; }
+.scrim { position: fixed; inset: 0; background: var(--scrim); display: flex; align-items: center; justify-content: center; padding: 16px; z-index: 10; }
+.pop {
+  background: var(--paper); color: var(--ink); width: 100%; max-width: 460px; max-height: calc(100% - 32px); overflow: auto;
+  padding: 22px 24px 24px; border: 1px solid var(--ink); position: relative;
+}
+.pop-top { display: flex; justify-content: space-between; align-items: baseline; font-size: 12px; color: var(--grey); }
+.pop h2 { margin: 6px 0 14px; font-size: 40px; line-height: 1; font-weight: 500; letter-spacing: -0.03em; }
+.pop .x { font: inherit; font-size: 14px; background: none; border: 1px solid var(--rule); color: var(--ink); cursor: pointer; padding: 4px 10px; }
+.pop .x:hover { background: var(--fill); }
+.ptab { width: 100%; border-collapse: collapse; border-top: 1px solid var(--ink); font-size: 15px; }
+.ptab th, .ptab td { text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--rule); vertical-align: top; }
+.ptab th { font-weight: 500; width: 34%; }
+.ptab th small { display: block; font-size: 11px; font-weight: 400; color: var(--grey); }
+.ptab td b { font-weight: 700; }
+.pnote { font-size: 13px; line-height: 18px; color: var(--grey); margin: 10px 0 0; }
+.pnote b { color: var(--ink); font-weight: 600; }
+
+@media (max-width: 760px) {
+  .sec { flex-direction: column; gap: 8px; }
+  .sec-label { width: auto; }
+  .cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .card { aspect-ratio: 4 / 3; }
+  .slot:last-child { grid-column: 1 / -1; }
+  .slot:last-child .card { aspect-ratio: 8 / 3; }
+  .card .word { font-size: 26px; }
+  .card .word.long { font-size: 22px; }
+  .card .word.xlong { font-size: 19px; }
+  .hint { display: none; }
+  .score-grid { grid-template-columns: repeat(3, auto); }
+}
+@media (prefers-reduced-motion: reduce) { .card.flip .inner { animation: none; } }
+</style>
+</head>
+<body>
+
+
+<main class="sheet">
+  <header>
+    <div class="topline"><span>[ Lesson 3 ]</span><span>game</span></div>
+    <h1>Пять карточек</h1>
+  </header>
+
+  <section class="sec">
+    <div class="sec-label">Rules<span>правила</span></div>
+    <div class="sec-body">
+      <p class="rules">Five cards from one mixed deck. Make one or two sentences; you don’t have to use every word. Tap each word you used, then tick each case you used correctly. <b>1 point</b> per word, <b>1 point</b> per case, <b>+2</b> if it all fits in one sentence. Stuck on a form? Press <b>?</b> under the card.</p>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="sec-label">Cards<span>tap a word you used</span></div>
+    <div class="sec-body" style="display:flex;flex-direction:column;gap:14px">
+      <div class="cards" id="cards"></div>
+      <div class="controls">
+        <button class="btn primary" id="draw" type="button">Draw five cards</button>
+        <span class="hint"><kbd>Space</kbd> draw · <kbd>1</kbd>–<kbd>5</kbd> mark a word</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="sec-label">This round<span>words + cases</span></div>
+    <div class="sec-body">
+      <div class="score-grid">
+        <div><div class="sc-n" id="nWords">0</div><div class="sc-l">words</div></div>
+        <div><div class="sc-n" id="nCases">0</div><div class="sc-l">cases</div></div>
+        <div><div class="sc-n" id="nBonus">0</div><div class="sc-l">one sentence</div></div>
+        <div class="sc-total"><div class="sc-n" id="pts">0</div><div class="sc-l">points this round</div></div>
+      </div>
+      <div class="chips" id="chips"></div>
+      <div class="give" id="give"></div>
+    </div>
+  </section>
+
+  <section class="sec">
+    <div class="sec-label">Score<span>names are editable</span></div>
+    <div class="sec-body">
+      <div class="players" id="players"></div>
+      <div class="foot">
+        <span id="roundInfo">Round 1</span>
+        <button type="button" id="undo">Undo last points</button>
+        <button type="button" id="reset">New game</button>
+        <span id="resetConfirm" hidden><span class="confirm">Reset the score?</span> <button type="button" id="resetYes">Yes, reset</button> <button type="button" id="resetNo">Cancel</button></span>
+      </div>
+    </div>
+  </section>
+</main>
+
+<div class="scrim" id="scrim" hidden>
+  <div class="pop" role="dialog" aria-modal="true" aria-labelledby="popWord" id="pop">
+    <div class="pop-top"><span id="popKind">person</span><button class="x" id="popClose" type="button">Close</button></div>
+    <h2 id="popWord"></h2>
+    <div id="popBody"></div>
+  </div>
+</div>
+
+<script>
+// Nominative, genitive, dative, accusative, instrumental, prepositional (singular)
+const W = {
+  person: {
+    "начальник": ["начальник","начальника","начальнику","начальника","начальником","о начальнике"],
+    "сосед": ["сосед","соседа","соседу","соседа","соседом","о соседе"],
+    "соседка": ["соседка","соседки","соседке","соседку","соседкой","о соседке"],
+    "коллега": ["коллега","коллеги","коллеге","коллегу","коллегой","о коллеге"],
+    "друг": ["друг","друга","другу","друга","другом","о друге"],
+    "брат": ["брат","брата","брату","брата","братом","о брате"],
+    "сестра": ["сестра","сестры","сестре","сестру","сестрой","о сестре"],
+    "тётя": ["тётя","тёти","тёте","тётю","тётей","о тёте"],
+    "бабушка": ["бабушка","бабушки","бабушке","бабушку","бабушкой","о бабушке"],
+    "Андрей": ["Андрей","Андрея","Андрею","Андрея","Андреем","об Андрее"],
+  },
+  object: {
+    "зонт": ["зонт","зонта","зонту","зонт","зонтом","о зонте"],
+    "кактус": ["кактус","кактуса","кактусу","кактус","кактусом","о кактусе"],
+    "будильник": ["будильник","будильника","будильнику","будильник","будильником","о будильнике"],
+    "торт": ["торт","торта","торту","торт","тортом","о торте"],
+    "книга": ["книга","книги","книге","книгу","книгой","о книге"],
+    "шарф": ["шарф","шарфа","шарфу","шарф","шарфом","о шарфе"],
+    "свечка": ["свечка","свечки","свечке","свечку","свечкой","о свечке"],
+    "кофе": ["кофе","кофе","кофе","кофе","кофе","о кофе"],
+    "велосипед": ["велосипед","велосипеда","велосипеду","велосипед","велосипедом","о велосипеде"],
+    "ноутбук": ["ноутбук","ноутбука","ноутбуку","ноутбук","ноутбуком","о ноутбуке"],
+    "телефон": ["телефон","телефона","телефону","телефон","телефоном","о телефоне"],
+    "чемодан": ["чемодан","чемодана","чемодану","чемодан","чемоданом","о чемодане"],
+    "паспорт": ["паспорт","паспорта","паспорту","паспорт","паспортом","о паспорте"],
+    "ключ": ["ключ","ключа","ключу","ключ","ключом","о ключе"],
+    "словарь": ["словарь","словаря","словарю","словарь","словарём","о словаре"],
+    "тетрадь": ["тетрадь","тетради","тетради","тетрадь","тетрадью","о тетради"],
+    "кресло": ["кресло","кресла","креслу","кресло","креслом","о кресле"],
+    "платье": ["платье","платья","платью","платье","платьем","о платье"],
+    "собака": ["собака","собаки","собаке","собаку","собакой","о собаке"],
+    "кошка": ["кошка","кошки","кошке","кошку","кошкой","о кошке"],
+  },
+  place: {
+    "школа": ["школа","школы","школе","школу","школой","о школе"],
+    "деревня": ["деревня","деревни","деревне","деревню","деревней","о деревне"],
+    "Италия": ["Италия","Италии","Италии","Италию","Италией","об Италии"],
+    "ресторан": ["ресторан","ресторана","ресторану","ресторан","рестораном","о ресторане"],
+    "парк": ["парк","парка","парку","парк","парком","о парке"],
+    "музей": ["музей","музея","музею","музей","музеем","о музее"],
+    "море": ["море","моря","морю","море","морем","о море"],
+    "площадь": ["площадь","площади","площади","площадь","площадью","о площади"],
+    "кафе": ["кафе","кафе","кафе","кафе","кафе","о кафе"],
+    "вокзал": ["вокзал","вокзала","вокзалу","вокзал","вокзалом","о вокзале"],
+  },
+  profession: {
+    "врач": ["врач","врача","врачу","врача","врачом","о враче"],
+    "повар": ["повар","повара","повару","повара","поваром","о поваре"],
+    "учитель": ["учитель","учителя","учителю","учителя","учителем","об учителе"],
+    "программист": ["программист","программиста","программисту","программиста","программистом","о программисте"],
+    "таксист": ["таксист","таксиста","таксисту","таксиста","таксистом","о таксисте"],
+    "фотограф": ["фотограф","фотографа","фотографу","фотографа","фотографом","о фотографе"],
+    "официант": ["официант","официанта","официанту","официанта","официантом","об официанте"],
+    "актёр": ["актёр","актёра","актёру","актёра","актёром","об актёре"],
+    "пилот": ["пилот","пилота","пилоту","пилота","пилотом","о пилоте"],
+    "бухгалтер": ["бухгалтер","бухгалтера","бухгалтеру","бухгалтера","бухгалтером","о бухгалтере"],
+  },
+};
+// where (в/на + prep.), where to (в/на + acc.), from where (из/с + gen.)
+const PLACE_IN = {
+  "школа": "в", "деревня": "в", "Италия": "в", "ресторан": "в", "парк": "в",
+  "музей": "в", "море": "на", "площадь": "на", "кафе": "в", "вокзал": "на",
+};
+const PREPS = {
+  "у": [["genitive", "at someone’s; has", "у брата, у бабушки"]],
+  "без": [["genitive", "without", "без зонта, без кофе"]],
+  "для": [["genitive", "for (someone)", "для сестры, для друга"]],
+  "после": [["genitive", "after", "после школы, после концерта"]],
+  "к": [["dative", "to (a person)", "к врачу, к бабушке"]],
+  "с": [["instrumental", "with, together", "с другом, с собакой"], ["genitive", "from (на-places)", "с вокзала, с моря"]],
+  "о": [["prepositional", "about", "о книге, об Андрее"]],
+  "за": [["instrumental", "behind; to fetch", "за парком, за кофе"], ["accusative", "for (thanks, pay)", "спасибо за торт"]],
+  "перед": [["instrumental", "in front of; before", "перед музеем, перед школой"]],
+  "через": [["accusative", "through; in (time)", "через парк, через час"]],
+};
+const CASES = [
+  ["nom.", "who? what?"], ["gen.", "of whom? of what?"], ["dat.", "to whom? to what?"],
+  ["acc.", "whom? what? (object)"], ["instr.", "with whom? with what?"], ["prep.", "about whom? about what?"],
+];
+const ANIMATE = new Set(["person", "profession"]);
+
+function shuffle(a) { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
+const ALL = Object.entries(W).flatMap(([key, o]) => Object.keys(o).map(w => ({ key, w })))
+  .concat(Object.keys(PREPS).map(w => ({ key: "preposition", w })));
+const N = 5;
+const MAX_PREP = 2;
+
+let S = {
+  pile: [], hand: [], used: [false, false, false, false, false],
+  cases: [false, false, false, false, false, false], bonus: false,
+  players: [{ name: "Player 1", score: 0 }, { name: "Player 2", score: 0 }],
+  turn: 0, round: 1, history: [],
+};
+
+// One mixed deck, no repeats until it runs out; at most two prepositions in a hand.
+function take(others) {
+  for (let t = 0; t < 300; t++) {
+    if (!S.pile.length) S.pile = shuffle(ALL);
+    const c = S.pile.pop();
+    const preps = others.filter(o => o && o.key === "preposition").length;
+    const clash = others.some(o => o && o.w === c.w) || (c.key === "preposition" && preps >= MAX_PREP);
+    if (!clash) return c;
+    S.pile.unshift(c);
+  }
+  return ALL.find(c => c.key !== "preposition" && !others.some(o => o && o.w === c.w));
+}
+
+function save() { try { localStorage.setItem("five-cards-v2", JSON.stringify(S)); } catch (e) {} }
+function load() { try { const d = JSON.parse(localStorage.getItem("five-cards-v2") || "null"); if (d && d.players) S = Object.assign(S, d); } catch (e) {} }
+function validHand() { return Array.isArray(S.hand) && S.hand.length === N && S.hand.every(c => c && c.key && c.w) && Array.isArray(S.used) && S.used.length === N; }
+
+const $ = id => document.getElementById(id);
+const esc = s => String(s).replace(/[&<>"]/g, ch => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[ch]));
+
+function renderCards(flipIdx) {
+  const box = $("cards");
+  box.innerHTML = "";
+  S.hand.forEach((c, i) => {
+    const w = c.w;
+    const slot = document.createElement("div");
+    slot.className = "slot";
+    const b = document.createElement("button");
+    b.type = "button";
+    b.className = "card" + (c.key === "preposition" ? " prep" : "") + (flipIdx && flipIdx.includes(i) ? " flip" : "");
+    b.setAttribute("aria-pressed", S.used[i] ? "true" : "false");
+    b.setAttribute("aria-label", c.key + ": " + w + (S.used[i] ? ", used" : ", tap if you used it"));
+    const long = w.length > 10 ? " xlong" : (w.length > 7 ? " long" : "");
+    b.innerHTML = `<span class="lbl">${c.key}</span><span class="inner" style="animation-delay:${flipIdx && flipIdx.length > 1 ? i * 70 : 0}ms"><span class="word${long}">${esc(w)}</span></span><span class="used">${S.used[i] ? "used ✓" : ""}</span>`;
+    b.addEventListener("click", () => toggleUsed(i));
+    const tools = document.createElement("div");
+    tools.className = "tools";
+    tools.innerHTML = `<button type="button" class="tool" aria-label="Forms of ${esc(w)}"><b>?</b></button><button type="button" class="tool" aria-label="Swap ${esc(w)}">swap ↻</button>`;
+    tools.children[0].addEventListener("click", () => openPop(c));
+    tools.children[1].addEventListener("click", () => swap(i));
+    slot.append(b, tools);
+    box.appendChild(slot);
+  });
+}
+
+function boldEnding(form, stem) {
+  const pre = form.startsWith("об ") ? "об " : form.startsWith("о ") ? "о " : "";
+  const core = form.slice(pre.length);
+  if (core.startsWith(stem) && core.length > stem.length) return esc(pre + stem) + "<b>" + esc(core.slice(stem.length)) + "</b>";
+  return esc(form);
+}
+function commonStem(forms) {
+  const cores = forms.map(f => f.replace(/^об? /, ""));
+  let s = cores[0];
+  for (const f of cores) { while (!f.startsWith(s)) s = s.slice(0, -1); }
+  return s;
+}
+
+function openPop(c) {
+  $("popKind").textContent = c.key;
+  $("popWord").textContent = c.w;
+  let html = "";
+  if (c.key === "preposition") {
+    html = `<table class="ptab"><tr><th>case</th><td><span style="color:var(--grey);font-size:12px">meaning · example</span></td></tr>` +
+      PREPS[c.w].map(([cs, mean, ex]) => `<tr><th>+ ${cs}</th><td>${esc(mean)}<br><b>${esc(ex)}</b></td></tr>`).join("") + `</table>`;
+    if (c.w === "о") html += `<p class="pnote">Before а, о, у, э, и: <b>об</b> — об Андрее, об Италии.</p>`;
+  } else {
+    const forms = W[c.key][c.w];
+    const stem = commonStem(forms);
+    html = `<table class="ptab">` + CASES.map(([cs, q], i) =>
+      `<tr><th>${cs}<small>${q}</small></th><td>${c.w === "кофе" || c.w === "кафе" ? esc(forms[i]) : boldEnding(forms[i], stem)}</td></tr>`).join("") + `</table>`;
+    if (c.w === "кофе" || c.w === "кафе") html += `<p class="pnote">Does not change: <b>${c.w}</b> is the same in every case.</p>`;
+    else if (ANIMATE.has(c.key) && !/[ая]$/.test(c.w)) html += `<p class="pnote">A living masculine word: accusative = genitive. Я вижу <b>${esc(forms[3])}</b>.</p>`;
+    if (c.key === "place") {
+      const v = PLACE_IN[c.w], from = v === "на" ? "с" : "из";
+      html += `<p class="pnote">where? <b>${v} ${esc(forms[5].replace(/^об? /, ""))}</b> · where to? <b>${v} ${esc(forms[3])}</b> · where from? <b>${from} ${esc(forms[1])}</b></p>`;
+    }
+  }
+  $("popBody").innerHTML = html;
+  $("scrim").hidden = false;
+  $("popClose").focus();
+}
+function closePop() { $("scrim").hidden = true; }
+$("popClose").addEventListener("click", closePop);
+$("scrim").addEventListener("click", e => { if (e.target === $("scrim")) closePop(); });
+
+function renderChips() {
+  const box = $("chips");
+  box.innerHTML = "";
+  CASES.forEach(([c, q], i) => {
+    const b = document.createElement("button");
+    b.type = "button"; b.className = "chip";
+    b.setAttribute("aria-pressed", S.cases[i] ? "true" : "false");
+    b.innerHTML = `${c}<small>${q}</small>`;
+    b.addEventListener("click", () => { S.cases[i] = !S.cases[i]; update(); });
+    box.appendChild(b);
+  });
+  const bb = document.createElement("button");
+  bb.type = "button"; bb.className = "chip bonus";
+  bb.setAttribute("aria-pressed", S.bonus ? "true" : "false");
+  bb.innerHTML = `One sentence<small>+2 points</small>`;
+  bb.addEventListener("click", () => { S.bonus = !S.bonus; update(); });
+  box.appendChild(bb);
+}
+
+const nWords = () => S.used.filter(Boolean).length;
+const nCases = () => S.cases.filter(Boolean).length;
+const points = () => nWords() + nCases() + (S.bonus ? 2 : 0);
+
+function renderGive() {
+  const box = $("give");
+  box.innerHTML = "";
+  S.players.forEach((p, i) => {
+    const b = document.createElement("button");
+    b.type = "button"; b.className = "btn" + (i === S.turn ? " primary" : "");
+    b.textContent = "Give " + points() + " to " + (p.name || "Player " + (i + 1));
+    b.addEventListener("click", () => award(i));
+    box.appendChild(b);
+  });
+}
+
+function renderPlayers() {
+  const box = $("players");
+  box.innerHTML = "";
+  S.players.forEach((p, i) => {
+    const d = document.createElement("div");
+    d.className = "pl" + (i === S.turn ? " turn" : "");
+    d.innerHTML = `<div style="min-width:0;flex-grow:1"><input id="name${i}" aria-label="Player ${i + 1} name"><div class="turn-tag">${i === S.turn ? "turn now" : "&nbsp;"}</div></div><span class="score">${p.score}</span>`;
+    const inp = d.querySelector("input");
+    inp.value = p.name;
+    inp.addEventListener("input", () => { S.players[i].name = inp.value; save(); renderGive(); });
+    box.appendChild(d);
+  });
+  $("roundInfo").textContent = "Round " + S.round;
+  $("undo").disabled = !S.history.length;
+}
+
+function update() {
+  renderChips();
+  $("nWords").textContent = nWords();
+  $("nCases").textContent = nCases();
+  $("nBonus").textContent = S.bonus ? "+2" : "0";
+  $("pts").textContent = points();
+  renderGive();
+  save();
+}
+
+function draw() {
+  const h = [];
+  for (let i = 0; i < N; i++) h.push(take(h));
+  S.hand = h;
+  S.used = [false, false, false, false, false];
+  renderCards([0, 1, 2, 3, 4]);
+  update();
+}
+function swap(i) {
+  const others = S.hand.filter((_, j) => j !== i);
+  S.hand[i] = take(others.concat([{ key: "_", w: S.hand[i].w }]));
+  S.used[i] = false;
+  renderCards([i]);
+  update();
+}
+function toggleUsed(i) {
+  S.used[i] = !S.used[i];
+  renderCards();
+  update();
+  const btn = $("cards").children[i]?.querySelector(".card");
+  if (btn) btn.focus();
+}
+
+function award(i) {
+  const pts = points();
+  S.history.push({ player: i, pts, turn: S.turn, round: S.round });
+  S.players[i].score += pts;
+  S.cases = [false, false, false, false, false, false];
+  S.bonus = false;
+  S.turn = (i + 1) % S.players.length;
+  S.round += 1;
+  renderPlayers();
+  draw();
+}
+
+$("undo").addEventListener("click", () => {
+  const h = S.history.pop();
+  if (!h) return;
+  S.players[h.player].score -= h.pts;
+  S.turn = h.turn; S.round = h.round;
+  renderPlayers(); update();
+});
+$("reset").addEventListener("click", () => { $("resetConfirm").hidden = false; });
+$("resetNo").addEventListener("click", () => { $("resetConfirm").hidden = true; });
+$("resetYes").addEventListener("click", () => {
+  S.players.forEach(p => p.score = 0);
+  S.turn = 0; S.round = 1; S.history = []; S.cases = [false, false, false, false, false, false]; S.bonus = false;
+  $("resetConfirm").hidden = true;
+  renderPlayers(); draw();
+});
+$("draw").addEventListener("click", draw);
+document.addEventListener("keydown", e => {
+  if (!$("scrim").hidden) { if (e.key === "Escape") closePop(); return; }
+  if (e.target.tagName === "INPUT") return;
+  if (e.code === "Space" && e.target.tagName !== "BUTTON") { e.preventDefault(); draw(); }
+  const n = parseInt(e.key, 10);
+  if (n >= 1 && n <= N) toggleUsed(n - 1);
+});
+
+function start(hot) {
+  load();
+  if (hot && hot.S) S = hot.S;
+  if (!validHand()) { const h = []; for (let i = 0; i < N; i++) h.push(take(h)); S.hand = h; S.used = [false, false, false, false, false]; }
+  renderCards();
+  renderPlayers();
+  update();
+}
+window.claude?.hot?.snapshot?.(() => ({ S }));
+window.claude?.hot?.ready ? window.claude.hot.ready(start) : start(window.claude?.hot?.data ?? {});
+</script>
+
+</body>
+</html>
